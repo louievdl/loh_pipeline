@@ -85,7 +85,7 @@ conda config --add channels r
 exit # restart shell for changes to take effect
 
 # env for polysolver
-conda create -n polysolver --file $PPLN_BASE_DIR/hla_loh_pipeline/polysolver-package-list.txt # success reinstalling packages from export file, see above
+conda create -n polysolver --file $PPLN_BASE_DIR/loh_pipeline/polysolver-package-list.txt # success reinstalling packages from export file, see above
 
 # env for lohhla
 conda create -n lohhla python=3 # skip conda update
