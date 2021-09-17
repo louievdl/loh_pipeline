@@ -57,7 +57,7 @@ conda activate sequenza
 if [ ! -f $SEQUENZA_DIR/ctl.pileup ]
 then
     samtools mpileup --fasta-ref $PPLN_BASE_DIR/genome/$GENOME"$CHR_SUFFIX".fa \
-        --positions $PPLN_BASE_DIR/copy_number_analysis/bedfiles/$GENOME"$CHR_SUFFIX"_exons.bed \
+        --positions $PPLN_BASE_DIR/genome/$GENOME"$CHR_SUFFIX"_exons.bed \
         --min-MQ 20 --excl-flags 256 $CTL_BAM \
         -o $SEQUENZA_DIR/ctl.pileup # ~68GB bam took 1h12m2s clock time to run, producing file of size 8,818,616,226; <1GB RAM
 fi
@@ -65,7 +65,7 @@ fi
 if [ ! -f $SEQUENZA_DIR/trt.pileup ]
 then
     samtools mpileup --fasta-ref $PPLN_BASE_DIR/genome/$GENOME"$CHR_SUFFIX".fa \
-        --positions $PPLN_BASE_DIR/copy_number_analysis/bedfiles/$GENOME"$CHR_SUFFIX"_exons.bed \
+        --positions $PPLN_BASE_DIR/genome/$GENOME"$CHR_SUFFIX"_exons.bed \
         --min-MQ 20 --excl-flags 256 $TRT_BAM \
         -o $SEQUENZA_DIR/trt.pileup # ~68GB bam took 1h4m18s clock time to run, producing file of size 8,342,805,140; would this be faster if connections were faster?
 fi

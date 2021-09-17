@@ -1,11 +1,11 @@
 #!/bin/bash
-# usage: bash submit_array.sh -g hg19 -r /SAN/colcc/alex_work/samples_analysis -c "" -s configuration/2021-06_copley_cancer_vs_normal.txt
+# usage: bash submit_array.sh -g hg19 -r /SAN/colcc/alex_work/samples_analysis -c "" -s configuration/2021-06_icgc_cancer_vs_normal.txt
 
 # some defaults
 GENOME="hg19" # default; must be hg19 or grch38
-CHR_SUFFIX="_nochr" # default; must be either "_nochr" OR ""; genome files (fasta, bed) are of the form GENOME CHR_SUFFIX
+CHR_SUFFIX="_nochr" # default; must be either "_nochr" OR "_chr"; genome files (fasta, bed) are of the form grch38_nochr*, hg19_chr*, etc
 RESULTS_BASE_DIR=/SAN/colcc/alex_work/samples_analysis
-SAMPLE_METADATA=configuration/2021-06_copley_cancer_vs_normal.txt
+SAMPLE_METADATA=configuration/2021-06_icgc_cancer_vs_normal.txt
 
 # set variables from arguments
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
