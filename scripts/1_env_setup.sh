@@ -10,7 +10,9 @@
 # typical interactive login to CoLCC
 #qlogin -l h_rt=3:0:0,h_vmem=8G,tmem=8G
 
-# define root dir for this analysis
+# define root dir for analysis in submission script
+
+# define root dir for this pipeline
 PPLN_BASE_DIR="/SAN/colcc/alex_work/pipeline"
 
 # main pipeline dir structure

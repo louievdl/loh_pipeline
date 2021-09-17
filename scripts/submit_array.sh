@@ -24,6 +24,11 @@ echo "chr in file name: $CHR_SUFFIX";
 echo "Results location: $RESULTS_BASE_DIR";
 echo "Sample metadata: $SAMPLE_METADATA";
 
+if [ ! -d $RESULTS_BASE_DIR ]
+then
+    mkdir $RESULTS_BASE_DIR
+fi
+
 # check for finished jobs, with lohhla outputs
 # identify pt ids (subdirs within RESULTS_BASE_DIR) with completed figures
 # use found pt ids to search first col in configuration/xx.txt; create file of grep patterns; empty file ok; do not repeat analysis in case of success
