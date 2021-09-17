@@ -1,0 +1,10 @@
+sample_id	control_bam	tumor_bam
+4100049X	/SAN/colcc/BCI_ICGC_raw/WGS/control_4100049X_merged.mdup.bam	/SAN/colcc/BCI_ICGC_raw/WGS/tumor_4100049X_merged.mdup.bam
+4100636	/SAN/colcc/BCI_ICGC_raw/WGS/control_4100636_merged.mdup.bam	/SAN/colcc/BCI_ICGC_raw/WGS/tumor_4100636_merged.mdup.bam
+4101316	/SAN/colcc/BCI_ICGC_raw/WGS/control_4101316_merged.bam.rmdup.bam	/SAN/colcc/BCI_ICGC_raw/WGS/tumor_4101316_merged.bam.rmdup.bam
+4101626	/SAN/colcc/BCI_ICGC_raw/WGS/control_4101626_merged.mdup.bam	/SAN/colcc/BCI_ICGC_raw/WGS/tumor_4101626_merged.mdup.bam
+4101815	/SAN/colcc/BCI_ICGC_raw/WGS/control_4101815_merged.mdup.bam	/SAN/colcc/BCI_ICGC_raw/WGS/tumor_4101815_merged.mdup.bam
+4102009	/SAN/colcc/BCI_ICGC_raw/WGS/control_4102009_merged.bam.rmdup.bam	/SAN/colcc/BCI_ICGC_raw/WGS/tumor_4102009_merged.bam.rmdup.bam
+4103141	/SAN/colcc/BCI_ICGC_raw/WGS/control_4103141_merged.bam.rmdup.bam	/SAN/colcc/BCI_ICGC_raw/WGS/tumor_4103141_merged.bam.rmdup.bam
+4103627X	/SAN/colcc/BCI_ICGC_raw/WGS/control_4103627X_merged.mdup.bam	/SAN/colcc/BCI_ICGC_raw/WGS/tumor_4103627X_merged.mdup.bam
+4104105	/SAN/colcc/BCI_ICGC_raw/WGS/control_4104105_merged.mdup.bam	/SAN/colcc/BCI_ICGC_raw/WGS/tumor_4104105_merged.mdup.bam
