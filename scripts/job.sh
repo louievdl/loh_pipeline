@@ -4,7 +4,10 @@
 # submission script supplies GENOME, CHR_SUFFIX, RESULTS_BASE_DIR, SAMPLE_METADATA
 
 #source ~/.bashrc # add condabin to PATH
-echo "path $PATH"
+echo "path $PATH ; conda $CONDA_EXE"
+
+# in case this is a subshell, set anaconda vars
+source $(dirname $CONDA_EXE)/../etc/profile.d/conda.sh
 
 
 
