@@ -14,7 +14,7 @@ SGE_TASK_ID=-1
 # set variables from arguments
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
 PPLN_BASE_DIR=$SCRIPT_DIR/..
-while getopts g:r:s:t: flag
+while getopts g:c:r:s:t: flag
 do
     case "${flag}" in
         g) GENOME=${OPTARG};;            # 'hg19' or 'grch38'
