@@ -13,7 +13,7 @@ SGE_TASK_ID=-1
 
 # set variables from arguments
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
-PPLN_BASE_DIR=$SCRIPT_DIR/..
+PPLN_BASE_DIR=$SCRIPT_DIR/../..
 while getopts g:c:r:s:t: flag
 do
     case "${flag}" in
@@ -65,5 +65,5 @@ echo "GENOME=$GENOME SAMPLE_METADATA=$SAMPLE_METADATA_TMP RESULTS_BASE_DIR=$RESU
 
 # qsub the array job
 # Request 1 core, 5 hour runtime (esp if 'chr' must be cleared from bam files), 20GB RAM, job array, 2 tasks run recurrently
-qsub -cwd -pe smp 1 -l h_rt=5:0:0,h_vmem=20G,tmem=20G -t 1-$TASK_COUNT -tc 2 -v GENOME=$GENOME,CHR_SUFFIX=$CHR_SUFFIX,RESULTS_BASE_DIR=$RESULTS_BASE_DIR,SAMPLE_METADATA=$SAMPLE_METADATA_TMP job.sh
+qsub -cwd -pe smp 1 -l h_rt=5:0:0,h_vmem=20G,tmem=20G -t 1-$TASK_COUNT -tc 2 -v GENOME=$GENOME,CHR_SUFFIX=$CHR_SUFFIX,RESULTS_BASE_DIR=$RESULTS_BASE_DIR,SAMPLE_METADATA=$SAMPLE_METADATA_TMP,PPLN_BASE_DIR=$PPLN_BASE_DIR job.sh
 
