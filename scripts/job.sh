@@ -150,8 +150,9 @@ then
     mkdir $POLYSOLVER_OUT_DIR
 fi
 
-HLA_DATA_DIR=$PPLN_BASE_DIR/hla_fasta
-HLA_FASTA=abc_complete.fasta
+# export vars so accessible to polysolver script
+export HLA_DATA_DIR=$PPLN_BASE_DIR/hla_fasta
+export HLA_FASTA=abc_complete.fasta
 
 #echo "running pipeline with genome $GENOME; files-list $SAMPLE_METADATA; SGE_TASK_ID $SGE_TASK_ID; pt-id $SAMPLE_ID; control-bam $CTL_BAM; treated-bam $TRT_BAM; bam-dir $BAM_DIR; target-bam $BAM; work-dir $WORK_DIR; out-dir $OUT_DIR"
 
