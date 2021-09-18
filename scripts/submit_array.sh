@@ -6,7 +6,7 @@
 
 # some defaults
 GENOME="hg19" # default; must be hg19 or grch38
-CHR_SUFFIX="_nochr" # default; must be either "_nochr" OR "_chr"; genome files (fasta, bed) are of the form grch38_nochr*, hg19_chr*, etc
+CHR_SUFFIX="nochr" # default; must be either "nochr" OR "chr"; genome files (fasta, bed) are of the form grch38_nochr*, hg19_chr*, etc
 RESULTS_BASE_DIR=/SAN/colcc/alex_work/samples_analysis
 SAMPLE_METADATA=configuration/2021-06_icgc_cancer_vs_normal.txt
 SGE_TASK_ID=-1
@@ -18,7 +18,7 @@ while getopts g:c:r:s:t: flag
 do
     case "${flag}" in
         g) GENOME=${OPTARG};;            # 'hg19' or 'grch38'
-        c) CHR_SUFFIX=${OPTARG};;        # '_chr' or '_nochr' if chromosomes are specified with or without 'chr' respectively; used to choose appropriately named genomic bed and fasta files
+        c) CHR_SUFFIX=${OPTARG};;        # 'chr' or 'nochr' if chromosomes are specified with or without 'chr' respectively; used to choose appropriately named genomic bed and fasta files
         r) RESULTS_BASE_DIR=${OPTARG};;  # base directory for analysis results
         s) SAMPLE_METADATA=${OPTARG};;   # sample metadata file
         t) SGE_TASK_ID=${OPTARG};;       # run a specific task (line number in the file, after removal of successfully completed jobs)
@@ -28,6 +28,8 @@ echo "Genome: $GENOME";
 echo "chr in file name: $CHR_SUFFIX";
 echo "Results location: $RESULTS_BASE_DIR";
 echo "Sample metadata: $SAMPLE_METADATA";
+## NOTE: if underscore is placed at beginning of a text string, seems to need double quotes around it when assigning to a variable: echo works ok, but passing it to a script doesn't seem to, so avoid if possible
+
 
 if [ ! -d $RESULTS_BASE_DIR ]
 then
