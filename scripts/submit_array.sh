@@ -39,6 +39,12 @@ fi
 # if a job is specified (only to be done if running interactively), analyse chosen sample and exit the script
 if [ $SGE_TASK_ID -gt -1 ]
 then
+    #export GENOME=$GENOME
+    #export CHR_SUFFIX=$CHR_SUFFIX
+    #export RESULTS_BASE_DIR=$RESULTS_BASE_DIR
+    #export SAMPLE_METADATA=$SAMPLE_METADATA
+    #export SGE_TASK_ID=$SGE_TASK_ID
+    #export PPLN_BASE_DIR=$PPLN_BASE_DIR
     . ./job.sh # extra . means run-in-this-env
     exit 0
 fi

@@ -3,7 +3,7 @@
 
 # submission script supplies GENOME, CHR_SUFFIX, RESULTS_BASE_DIR, SAMPLE_METADATA
 
-source ~/.bashrc # add condabin to PATH
+#source ~/.bashrc # add condabin to PATH
 echo "path $PATH"
 
 
@@ -205,6 +205,11 @@ if [ ! -d $LOHHLA_DIR/results ]
 then
     mkdir $LOHHLA_DIR/results
 fi
+
+if [ ! -d $LOHHLA_DIR/results/Figures ]
+then
+    mkdir $LOHHLA_DIR/results/Figures
+fi
 #echo "running lohhla with genome $GENOME; pt-id $SAMPLE_ID; out-dir $OUT_DIR"
 
 
@@ -213,7 +218,6 @@ fi
 # use less than total available memory for sorting
 SORT_MEM=16G
 
-#source ~/.bashrc # put conda into path # already done
 conda activate lohhla # required for novoalign, samtools, bedtools, jellyfish
 
 # sort input files if nec. use less than total requested memory.
