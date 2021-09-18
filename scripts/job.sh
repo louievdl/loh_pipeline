@@ -120,6 +120,8 @@ then
     #example_tumor_sorted    2       0.8     1.8     # not sure what Ploidy is for, need tumor* vars for lohhla
 fi
 
+conda deactivate
+
 
 
 #################################################
