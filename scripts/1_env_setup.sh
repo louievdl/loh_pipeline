@@ -99,6 +99,9 @@ conda install -n lohhla -c bioconda --force-reinstall bioconductor-genomeinfodbd
 #R --vanilla
 #> library(GenomeInfoDb) # unsuccessful, R complained "no package called ‘GenomeInfoDbData’"
 # after rerunning the reinstall, package loaded ok
+# however, running on hpc showed libgomp not accessible, tried reinstalling
+conda install -n lohhla -c conda-forge libgomp=11.1.0 # only goes up to GOMP 4.0
+conda update -n lohhla libgomp # gets libgomp-11.2.0, jbig, lerc, updates some others, removes perl-5.32.1; data.table now loads in R
 
 # after lohhla, packages were installed in this order...
 #conda install -n lohhla jellyfish=2.2.6 # done 20210616
