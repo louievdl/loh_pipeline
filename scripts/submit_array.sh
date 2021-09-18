@@ -1,8 +1,8 @@
 #!/bin/bash
-# usage: bash submit_array.sh -g hg19 -r /SAN/colcc/alex_work/samples_analysis -c _nochr -s configuration/2021-06_icgc_cancer_vs_normal.txt
+# usage: bash submit_array.sh -g hg19 -r /SAN/colcc/alex_work/samples_analysis -c nochr -s configuration/2021-06_icgc_cancer_vs_normal.txt
 #
 # or specify a SGE_TASK_ID, in which case run interactively rather than submitting, in which case
-# usage: bash submit_array.sh -g hg19 -r /SAN/colcc/alex_work/samples_analysis -c _nochr -s configuration/2021-06_icgc_cancer_vs_normal.txt -t 57 >stdout.txt 2>stderr.txt &
+# usage: bash submit_array.sh -g hg19 -r /SAN/colcc/alex_work/samples_analysis -c nochr -s configuration/2021-06_icgc_cancer_vs_normal.txt -t 57 >stdout.txt 2>stderr.txt &
 
 # some defaults
 GENOME="hg19" # default; must be hg19 or grch38
