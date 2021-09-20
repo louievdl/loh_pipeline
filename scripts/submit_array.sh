@@ -72,6 +72,6 @@ TASK_COUNT=$((NUM_LINES-1))
 echo "GENOME=$GENOME SAMPLE_METADATA=$SAMPLE_METADATA_TMP RESULTS_BASE_DIR=$RESULTS_BASE_DIR TASK_COUNT=$TASK_COUNT SGE_TASK_ID=$SGE_TASK_ID "
 
 # qsub the array job
-# Request 1 core, 5 hour runtime, 8GB RAM, job array, 2 tasks run concurrently; tell nodes conda location
-qsub -cwd -pe smp 1 -l h_rt=5:0:0,h_vmem=8G,tmem=8G -t 1-$TASK_COUNT -tc 2 -v GENOME=$GENOME,CHR_SUFFIX=$CHR_SUFFIX,RESULTS_BASE_DIR=$RESULTS_BASE_DIR,SAMPLE_METADATA=$SAMPLE_METADATA_TMP,PPLN_BASE_DIR=$PPLN_BASE_DIR,CONDA_EXE=$CONDA_EXE job.sh
+# Request 1 core, 8 hour runtime, 8GB RAM, job array, 10 tasks run concurrently; tell nodes conda location
+qsub -cwd -pe smp 1 -l h_rt=8:0:0,h_vmem=8G,tmem=8G -t 1-$TASK_COUNT -tc 10 -v GENOME=$GENOME,CHR_SUFFIX=$CHR_SUFFIX,RESULTS_BASE_DIR=$RESULTS_BASE_DIR,SAMPLE_METADATA=$SAMPLE_METADATA_TMP,PPLN_BASE_DIR=$PPLN_BASE_DIR,CONDA_EXE=$CONDA_EXE job.sh
 
