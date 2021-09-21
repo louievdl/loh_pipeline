@@ -264,7 +264,7 @@ Rscript $PPLN_BASE_DIR/LOHHLA/LOHHLAscript.R \
   --CopyNumLoc=$SEQUENZA_DIR/purity_ploidy.txt \
   --plottingStep=TRUE \
   --cleanUp=TRUE \
-  --HLAexonLoc=$PPLN_BASE_DIR/hla_fasta/hla.dat & # flat file showing exons; note, hla_x_nn names in this file are in standard notation
+  --HLAexonLoc=$PPLN_BASE_DIR/hla_fasta/hla.dat # flat file showing exons; note, hla_x_nn names in this file are in standard notation
 # use a copynumloc file, not FALSE.
 # by supplying estimated read counts, cut down run time substantially
 
