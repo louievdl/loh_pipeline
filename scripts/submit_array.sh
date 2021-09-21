@@ -1,5 +1,5 @@
 #!/bin/bash
-# usage: bash submit_array.sh -g hg19 -r /SAN/colcc/alex_work/samples_analysis -c nochr -s configuration/2021-06_icgc_cancer_vs_normal.txt
+# usage: bash submit_array.sh -g hg19 -r /SAN/colcc/alex_work/samples_analysis -c nochr -s configuration/2021-06_icgc_cancer_vs_normal.txt -m 16 -h 16
 #
 # or specify a SGE_TASK_ID, in which case run interactively rather than submitting, in which case
 # usage: bash submit_array.sh -g hg19 -r /SAN/colcc/alex_work/samples_analysis -c nochr -s configuration/2021-06_icgc_cancer_vs_normal.txt -t 57 >stdout.txt 2>stderr.txt &
@@ -10,17 +10,21 @@ CHR_SUFFIX="nochr" # default; must be either "nochr" OR "chr"; genome files (fas
 RESULTS_BASE_DIR=/SAN/colcc/alex_work/samples_analysis
 SAMPLE_METADATA=configuration/2021-06_icgc_cancer_vs_normal.txt
 SGE_TASK_ID=-1
+REQUEST_GB_MEM=16
+REQUEST_HRS_RUN=16
 
 # set variables from arguments
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
 PPLN_BASE_DIR=$SCRIPT_DIR/../..
-while getopts g:c:r:s:t: flag
+while getopts g:c:r:s:m:h:t: flag
 do
     case "${flag}" in
         g) GENOME=${OPTARG};;            # 'hg19' or 'grch38'
         c) CHR_SUFFIX=${OPTARG};;        # 'chr' or 'nochr' if chromosomes are specified with or without 'chr' respectively; used to choose appropriately named genomic bed and fasta files
         r) RESULTS_BASE_DIR=${OPTARG};;  # base directory for analysis results
         s) SAMPLE_METADATA=${OPTARG};;   # sample metadata file
+        m) REQUEST_GB_MEM=${OPTARG};;    # request GB RAM for queued jobs
+        h) REQUEST_HRS_RUN=${OPTARG};;   # request hours of runtime for queued jobs
         t) SGE_TASK_ID=${OPTARG};;       # run a specific task (line number in the file, after removal of successfully completed jobs)
     esac
 done
@@ -39,12 +43,6 @@ fi
 # if a job is specified (only to be done if running interactively), analyse chosen sample and exit the script
 if [ $SGE_TASK_ID -gt -1 ]
 then
-    #export GENOME=$GENOME
-    #export CHR_SUFFIX=$CHR_SUFFIX
-    #export RESULTS_BASE_DIR=$RESULTS_BASE_DIR
-    #export SAMPLE_METADATA=$SAMPLE_METADATA
-    #export SGE_TASK_ID=$SGE_TASK_ID
-    #export PPLN_BASE_DIR=$PPLN_BASE_DIR
     . ./job.sh # extra . means run-in-this-env
     exit 0
 fi
@@ -71,7 +69,8 @@ TASK_COUNT=$((NUM_LINES-1))
 
 echo "GENOME=$GENOME SAMPLE_METADATA=$SAMPLE_METADATA_TMP RESULTS_BASE_DIR=$RESULTS_BASE_DIR TASK_COUNT=$TASK_COUNT SGE_TASK_ID=$SGE_TASK_ID "
 
+
 # qsub the array job
-# Request 1 core, 12 hour runtime, 16GB RAM, job array, 10 tasks run concurrently; tell nodes conda location; many tasks fail in mem allocation with 8GB or time out with 8 hours
-qsub -cwd -pe smp 1 -l h_rt=12:0:0,h_vmem=16G,tmem=16G -t 1-$TASK_COUNT -tc 10 -v GENOME=$GENOME,CHR_SUFFIX=$CHR_SUFFIX,RESULTS_BASE_DIR=$RESULTS_BASE_DIR,SAMPLE_METADATA=$SAMPLE_METADATA_TMP,PPLN_BASE_DIR=$PPLN_BASE_DIR,CONDA_EXE=$CONDA_EXE job.sh
+# Request 1 core, 16 hour runtime, 16GB RAM, job array, 10 tasks run concurrently; tell nodes conda location; many tasks fail in mem allocation with 8GB or time out with 8 hours
+qsub -cwd -pe smp 1 -l "h_rt="$REQUEST_HRS_RUN":0:0,h_vmem="$REQUEST_GB_MEM"G,tmem="$REQUEST_GB_MEM"G" -t 1-$TASK_COUNT -tc 10 -v GENOME=$GENOME,CHR_SUFFIX=$CHR_SUFFIX,RESULTS_BASE_DIR=$RESULTS_BASE_DIR,SAMPLE_METADATA=$SAMPLE_METADATA_TMP,PPLN_BASE_DIR=$PPLN_BASE_DIR,CONDA_EXE=$CONDA_EXE,REQUEST_GB_MEM=$REQUEST_GB_MEM job.sh
 

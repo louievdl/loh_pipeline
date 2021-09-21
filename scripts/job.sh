@@ -220,7 +220,7 @@ fi
 ### RUN LOHHLA ###
 
 # use less than total available memory for sorting
-SORT_MEM=16G
+SORT_MEM="$(($REQUEST_GB_MEM - 1))G"
 
 conda activate lohhla # required for novoalign, samtools, bedtools, jellyfish
 
