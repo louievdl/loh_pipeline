@@ -92,6 +92,7 @@ then
         sample_name <- Args[2];
         library(sequenza);
         seqz.data <- read.seqz(data.file);
+        seqz.data <- seqz.data[ ! seqz.data$chromosome %in% c("M", "MT"), ]
         gc.stats <- gc.sample.stats(data.file);
         gc.normal.vect <- mean_gc(gc.stats$normal);
         gc.tumor.vect <- mean_gc(gc.stats$tumor);
