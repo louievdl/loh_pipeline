@@ -72,5 +72,6 @@ echo "GENOME=$GENOME SAMPLE_METADATA=$SAMPLE_METADATA_TMP RESULTS_BASE_DIR=$RESU
 
 # qsub the array job
 # Request 1 core, 16 hour runtime, 16GB RAM, job array, 10 tasks run concurrently; tell nodes conda location; many tasks fail in mem allocation with 8GB or time out with 8 hours
-qsub -cwd -pe smp 1 -l "h_rt="$REQUEST_HRS_RUN":0:0,h_vmem="$REQUEST_GB_MEM"G,tmem="$REQUEST_GB_MEM"G" -t 1-$TASK_COUNT -tc 10 -v GENOME=$GENOME,CHR_SUFFIX=$CHR_SUFFIX,RESULTS_BASE_DIR=$RESULTS_BASE_DIR,SAMPLE_METADATA=$SAMPLE_METADATA_TMP,PPLN_BASE_DIR=$PPLN_BASE_DIR,CONDA_EXE=$CONDA_EXE,REQUEST_GB_MEM=$REQUEST_GB_MEM job.sh
+# note '-pe smp N' is for multi-threaded jobs with N>1 cores and restricts jobs to multi-core hosts; don't do this
+qsub -cwd -l "h_rt="$REQUEST_HRS_RUN":0:0,h_vmem="$REQUEST_GB_MEM"G,tmem="$REQUEST_GB_MEM"G" -t 1-$TASK_COUNT -tc 10 -v GENOME=$GENOME,CHR_SUFFIX=$CHR_SUFFIX,RESULTS_BASE_DIR=$RESULTS_BASE_DIR,SAMPLE_METADATA=$SAMPLE_METADATA_TMP,PPLN_BASE_DIR=$PPLN_BASE_DIR,CONDA_EXE=$CONDA_EXE,REQUEST_GB_MEM=$REQUEST_GB_MEM job.sh
 
