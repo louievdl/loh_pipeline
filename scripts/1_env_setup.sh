@@ -102,6 +102,7 @@ conda install -n lohhla -c bioconda --force-reinstall bioconductor-genomeinfodbd
 # however, running on hpc showed libgomp not accessible, tried reinstalling
 conda install -n lohhla -c conda-forge libgomp=11.1.0 # only goes up to GOMP 4.0
 conda update -n lohhla libgomp # gets libgomp-11.2.0, jbig, lerc, updates some others, removes perl-5.32.1; data.table now loads in R
+conda install -n lohhla --force-reinstall libstdcxx-ng=11.2.0 # done to connect libstdc++.so.6 to libstdc++.so.6.0.29; required for lohhla to output results tsv file
 
 # after lohhla, packages were installed in this order...
 #conda install -n lohhla jellyfish=2.2.6 # done 20210616
