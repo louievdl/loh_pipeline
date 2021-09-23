@@ -18,7 +18,7 @@ function finish {
     rm -rf $SCRATCH_DIR
 }
 # Always wipe scratch
-trap finish EXIT ERR
+trap finish EXIT ERR INT TERM
 
 
 
