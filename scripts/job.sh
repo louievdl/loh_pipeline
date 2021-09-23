@@ -249,7 +249,6 @@ fi
 # lohhla is fork of slagtermaarten/LOHHLA
 #echo "$SHELL"
 Rscript $PPLN_BASE_DIR/LOHHLA/LOHHLAscript.R \
-  --LOHHLA_loc=$PPLN_BASE_DIR/LOHHLA \
   --genomeAssembly=$GENOME \
   --patientId=$SAMPLE_ID \
   --outputDir=$LOHHLA_OUT_DIR \
@@ -267,6 +266,7 @@ Rscript $PPLN_BASE_DIR/LOHHLA/LOHHLAscript.R \
   --HLAexonLoc=$PPLN_BASE_DIR/hla_fasta/hla.dat # flat file showing exons; note, hla_x_nn names in this file are in standard notation
 # use a copynumloc file, not FALSE.
 # by supplying estimated read counts, cut down run time substantially
+#--LOHHLA_loc=$PPLN_BASE_DIR/LOHHLA \ # forking from mcg, this opt unnec
 
 conda deactivate
 
