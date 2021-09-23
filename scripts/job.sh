@@ -9,6 +9,18 @@ echo "path $PATH ; conda $CONDA_EXE"
 # in case this is a subshell, set anaconda vars
 source $(dirname $CONDA_EXE)/../etc/profile.d/conda.sh
 
+# deletion of scratch dir at task end, regardless of condition
+SCRATCH_DIR=/scratch0/lvandela/$JOB_ID.$SGE_TASK_ID
+function finish {
+    echo "scratch contents..."
+    ls -l $SCRATCH_DIR
+    echo "deleting scratch..."
+    rm -rf $SCRATCH_DIR
+}
+# Always wipe scratch
+trap finish EXIT ERR
+
+
 
 
 #################################################
@@ -27,20 +39,39 @@ SAMPLE_DIR="$RESULTS_BASE_DIR/$SAMPLE_ID" # compute in individual task; should b
 mkdir $SAMPLE_DIR
 BAM_DIR="$SAMPLE_DIR/bams"
 mkdir $BAM_DIR
-CTL_BAM_LINK=$BAM_DIR/$(basename $CTL_BAM | perl -ne 's/\./_/g; s/_bam$/.bam/; print') # sanitise bam names and link sanitised names to orig files
+CTL_BAM_LINK=$BAM_DIR/$(basename $CTL_BAM | perl -ne 's/\./_/g; s/_bam$/.bam/; print') # sanitise bam names and link sanitised names to orig files, either in scratch or orig location
 TRT_BAM_LINK=$BAM_DIR/$(basename $TRT_BAM | perl -ne 's/\./_/g; s/_bam$/.bam/; print')
-ln -s $CTL_BAM $CTL_BAM_LINK
-ln -s $TRT_BAM $TRT_BAM_LINK
-ln -s $CTL_BAM.bai $CTL_BAM_LINK.bai
-ln -s $TRT_BAM.bai $TRT_BAM_LINK.bai
 CTL_BASENAME=$(basename $CTL_BAM_LINK | perl -ne 's/\.bam$//; print') # remove .bam
 TRT_BASENAME=$(basename $TRT_BAM_LINK | perl -ne 's/\.bam$//; print')
+
+USE_SCRATCH=true
+if [ ! $USE_SCRATCH ]
+then
+    # use files directly via symlink - forbidden on UCL HPC
+    ln -s $CTL_BAM $CTL_BAM_LINK
+    ln -s $TRT_BAM $TRT_BAM_LINK
+    ln -s $CTL_BAM.bai $CTL_BAM_LINK.bai
+    ln -s $TRT_BAM.bai $TRT_BAM_LINK.bai
+else
+    # use scratch space
+    echo "mkdir -p $SCRATCH_DIR"
+    mkdir -p $SCRATCH_DIR
+    time rsync -av $CTL_BAM $TRT_BAM $CTL_BAM.bai $TRT_BAM.bai $SCRATCH_DIR
+    ln -s $SCRATCH_DIR/$(basename $CTL_BAM) $CTL_BAM_LINK
+    ln -s $SCRATCH_DIR/$(basename $TRT_BAM) $TRT_BAM_LINK
+    ln -s $SCRATCH_DIR/$(basename $CTL_BAM).bai $CTL_BAM_LINK.bai
+    ln -s $SCRATCH_DIR/$(basename $TRT_BAM).bai $TRT_BAM_LINK.bai
+    CTL_BAM=$SCRATCH_DIR/$(basename $CTL_BAM)
+    TRT_BAM=$SCRATCH_DIR/$(basename $TRT_BAM)
+    echo "scratch contents"
+    ls -l $SCRATCH_DIR
+fi
 
 
 
 #################################################
 #
-# SEQUENZA
+# SEQUENZA COPY NUMBER ANALYSIS
 #
 #################################################
 
@@ -59,23 +90,55 @@ conda activate sequenza
 
 if [ ! -f $SEQUENZA_DIR/ctl.pileup ]
 then
+
+    if [ $USE_SCRATCH ]
+    then
+        CTL_PILEUP=$SCRATCH_DIR/ctl.pileup
+    else
+        CTL_PILEUP=$SEQUENZA_DIR/ctl.pileup
+    fi
+
     samtools mpileup --fasta-ref $PPLN_BASE_DIR/genome/$GENOME"_"$CHR_SUFFIX".fa" \
         --positions $PPLN_BASE_DIR/genome/$GENOME"_"$CHR_SUFFIX"_exons.bed" \
         --min-MQ 20 --excl-flags 256 $CTL_BAM \
-        -o $SEQUENZA_DIR/ctl.pileup # ~68GB bam took 1h12m2s clock time to run, producing file of size 8,818,616,226; <1GB RAM
+        -o $CTL_PILEUP # ~68GB bam took 1h12m2s clock time to run, producing file of size 8,818,616,226; <1GB RAM
+
+    if [ $USE_SCRATCH ]
+    then
+        rsync -av $CTL_PILEUP $SEQUENZA_DIR/ctl.pileup
+    fi
+
+else
+    CTL_PILEUP=$SEQUENZA_DIR/ctl.pileup
 fi
 
 if [ ! -f $SEQUENZA_DIR/trt.pileup ]
 then
+
+    if [ $USE_SCRATCH ]
+    then
+        TRT_PILEUP=$SCRATCH_DIR/trt.pileup
+    else
+        TRT_PILEUP=$SEQUENZA_DIR/trt.pileup
+    fi
+
     samtools mpileup --fasta-ref $PPLN_BASE_DIR/genome/$GENOME"_"$CHR_SUFFIX".fa" \
         --positions $PPLN_BASE_DIR/genome/$GENOME"_"$CHR_SUFFIX"_exons.bed" \
         --min-MQ 20 --excl-flags 256 $TRT_BAM \
-        -o $SEQUENZA_DIR/trt.pileup # ~68GB bam took 1h4m18s clock time to run, producing file of size 8,342,805,140; would this be faster if connections were faster?
+        -o $TRT_PILEUP # ~68GB bam took 1h4m18s clock time to run, producing file of size 8,342,805,140; would this be faster if connections were faster?
+
+    if [ $USE_SCRATCH ]
+    then
+        rsync -av $TRT_PILEUP $SEQUENZA_DIR/trt.pileup
+    fi
+
+else
+    TRT_PILEUP=$SEQUENZA_DIR/trt.pileup
 fi
 
 if [ ! -f $SEQUENZA_DIR/binned.seqz.gz ]
 then
-    sequenza-utils bam2seqz -p -n $SEQUENZA_DIR/ctl.pileup -t $SEQUENZA_DIR/trt.pileup \
+    sequenza-utils bam2seqz -p -n $CTL_PILEUP -t $TRT_PILEUP \
         --fasta $PPLN_BASE_DIR/genome/$GENOME"_"$CHR_SUFFIX".fa" \
         -gc $PPLN_BASE_DIR/genome/$GENOME"_"$CHR_SUFFIX".gc50Base.wig.gz" | \
         sequenza-utils seqz_binning -s - -w 100000 -o $SEQUENZA_DIR/binned.seqz.gz # pileups from two 68GB bams took 29m9s clock time to run, producing file of size 17,025,764
