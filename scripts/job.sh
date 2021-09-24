@@ -299,7 +299,9 @@ Rscript $PPLN_BASE_DIR/LOHHLA/LOHHLAscript.R \
   --CopyNumLoc=$SEQUENZA_DIR/purity_ploidy.txt \
   --plottingStep=TRUE \
   --cleanUp=TRUE \
-  --HLAexonLoc=$PPLN_BASE_DIR/hla_fasta/hla.dat # flat file showing exons; note, hla_x_nn names in this file are in standard notation
+  --HLAexonLoc=$PPLN_BASE_DIR/hla_fasta/hla.dat \
+  || touch $LOHHLA_OUT_DIR/Figures/no_result.pdf
+# hla.dat is flat file showing exons; note, hla_x_nn names in this file are in standard notation
 # use a copynumloc file, not FALSE.
 # by supplying estimated read counts, cut down run time substantially
 #--LOHHLA_loc=$PPLN_BASE_DIR/LOHHLA \ # forking from mcg, this opt unnec
