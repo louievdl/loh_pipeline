@@ -247,10 +247,8 @@ TRT_BAM_SIZE=$(stat -c%s "$TRT_BAM")
 TRT_BAM_READ_COUNT=$(($TRT_BAM_SIZE / 80))
 
 LOHHLA_DIR=$SAMPLE_DIR/lohhla
-LOHHLA_WORK_DIR=$LOHHLA_DIR/work
 LOHHLA_OUT_DIR=$LOHHLA_DIR/results
 [ ! -d $LOHHLA_DIR ] && mkdir $LOHHLA_DIR
-[ ! -d $LOHHLA_DIR/work ] && mkdir $LOHHLA_DIR/work
 [ ! -d $LOHHLA_DIR/results ] && mkdir $LOHHLA_DIR/results
 [ ! -d $LOHHLA_DIR/results/Figures ] && mkdir $LOHHLA_DIR/results/Figures
 
