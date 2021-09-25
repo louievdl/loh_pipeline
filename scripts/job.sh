@@ -9,7 +9,7 @@ echo "path $PATH ; conda $CONDA_EXE"
 # in case this is a subshell, set anaconda vars
 source $(dirname $CONDA_EXE)/../etc/profile.d/conda.sh
 
-# deletion of scratch dir at task end, regardless of condition
+# deletion of scratch dir at task end if EXIT, INT, TERM
 SCRATCH_DIR=/scratch0/lvandela/$JOB_ID.$SGE_TASK_ID
 function finish {
     echo "scratch contents..."
@@ -18,7 +18,7 @@ function finish {
     rm -rf $SCRATCH_DIR
 }
 # Always wipe scratch
-trap finish EXIT ERR INT TERM
+trap finish EXIT INT TERM # ERR # don't trap errors (polysolver may end in error, even when successful)
 
 
 
@@ -221,7 +221,7 @@ if [ ! -f $POLYSOLVER_OUT_DIR/winners.hla.txt ]
 then
 
     conda activate polysolver
-    . $PPLN_BASE_DIR/polysolver_inst/bin/shell_call_hla_type $CTL_BAM Unknown 1 $GENOME STDFQ 0 $POLYSOLVER_WORK_DIR || true # slightly modified polysolver script, permitting custom HLA allele library
+    . $PPLN_BASE_DIR/polysolver_inst/bin/shell_call_hla_type $CTL_BAM Unknown 1 $GENOME STDFQ 0 $POLYSOLVER_WORK_DIR # slightly modified polysolver script, permitting custom HLA allele library; errors not fatal
     conda deactivate
 
     if [ -f $POLYSOLVER_WORK_DIR/winners.hla.txt ]
@@ -299,8 +299,8 @@ Rscript $PPLN_BASE_DIR/LOHHLA/LOHHLAscript.R \
   --CopyNumLoc=$SEQUENZA_DIR/purity_ploidy.txt \
   --plottingStep=TRUE \
   --cleanUp=TRUE \
-  --HLAexonLoc=$PPLN_BASE_DIR/hla_fasta/hla.dat \
-  || touch $LOHHLA_OUT_DIR/Figures/no_result.pdf
+  --HLAexonLoc=$PPLN_BASE_DIR/hla_fasta/hla.dat
+#  || touch $LOHHLA_OUT_DIR/Figures/no_result.pdf # don't do this; if LOHHLA runs, worst case it puts out an empty pdf
 # hla.dat is flat file showing exons; note, hla_x_nn names in this file are in standard notation
 # use a copynumloc file, not FALSE.
 # by supplying estimated read counts, cut down run time substantially
