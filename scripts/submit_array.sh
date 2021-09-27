@@ -13,6 +13,7 @@ SGE_TASK_ID=-1
 REQUEST_GB_MEM=16
 REQUEST_HRS_RUN=16
 REQUEST_GB_SCRATCH=-1 # request explicitly with -S if scratch space required
+USE_SCRATCH=
 
 # set variables from arguments
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
@@ -76,6 +77,7 @@ TASK_COUNT=$((NUM_LINES-1))
 if [ $REQUEST_GB_SCRATCH -gt 0 ]
 then
     SCRATCH_RQ_STR=",tscratch=$REQUEST_GB_SCRATCH"G
+    USE_SCRATCH=true
 else
     SCRATCH_RQ_STR=""
 fi
@@ -86,5 +88,5 @@ echo "GENOME=$GENOME SAMPLE_METADATA=$SAMPLE_METADATA_TMP RESULTS_BASE_DIR=$RESU
 # qsub the array job
 # Request 1 core, 10 hour runtime, 16GB RAM, job array, 10 tasks run concurrently; 400G scratch space enough for ICGC data; tell nodes conda location
 # note '-pe smp N' is for multi-threaded jobs with N>1 cores and restricts jobs to multi-core hosts - unnecessary
-qsub -cwd -l "h_rt="$REQUEST_HRS_RUN":0:0,h_vmem="$REQUEST_GB_MEM"G,tmem="$REQUEST_GB_MEM"G"$SCRATCH_RQ_STR -t 1-$TASK_COUNT -tc 10 -v GENOME=$GENOME,CHR_SUFFIX=$CHR_SUFFIX,RESULTS_BASE_DIR=$RESULTS_BASE_DIR,SAMPLE_METADATA=$SAMPLE_METADATA_TMP,PPLN_BASE_DIR=$PPLN_BASE_DIR,CONDA_EXE=$CONDA_EXE,REQUEST_GB_MEM=$REQUEST_GB_MEM job.sh
+qsub -cwd -l "h_rt="$REQUEST_HRS_RUN":0:0,h_vmem="$REQUEST_GB_MEM"G,tmem="$REQUEST_GB_MEM"G"$SCRATCH_RQ_STR -t 1-$TASK_COUNT -tc 10 -v GENOME=$GENOME,CHR_SUFFIX=$CHR_SUFFIX,RESULTS_BASE_DIR=$RESULTS_BASE_DIR,SAMPLE_METADATA=$SAMPLE_METADATA_TMP,PPLN_BASE_DIR=$PPLN_BASE_DIR,CONDA_EXE=$CONDA_EXE,REQUEST_GB_MEM=$REQUEST_GB_MEM,USE_SCRATCH=$USE_SCRATCH job.sh
 

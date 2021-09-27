@@ -1,7 +1,7 @@
 #!/bin/bash
 # note, all job attributes specified outside this script
 
-# submission script supplies GENOME, CHR_SUFFIX, RESULTS_BASE_DIR, SAMPLE_METADATA
+# running env supplies GENOME, CHR_SUFFIX, RESULTS_BASE_DIR, SAMPLE_METADATA, USE_SCRATCH
 
 #source ~/.bashrc # add condabin to PATH
 echo "path $PATH ; conda $CONDA_EXE"
@@ -51,7 +51,6 @@ TRT_BASENAME=$(basename $TRT_BAM_LINK | perl -ne 's/\.bam$//; print')
 [ -L $TRT_BAM_LINK     ] && rm -f $TRT_BAM_LINK
 [ -L $TRT_BAM_LINK.bai ] && rm -f $TRT_BAM_LINK.bai
 
-USE_SCRATCH=true
 if [ $USE_SCRATCH ]
 then
     # use scratch space
