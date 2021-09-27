@@ -304,6 +304,7 @@ Rscript $PPLN_BASE_DIR/LOHHLA/LOHHLAscript.R \
 # use a copynumloc file, not FALSE.
 # by supplying estimated read counts, cut down run time substantially
 #--LOHHLA_loc=$PPLN_BASE_DIR/LOHHLA \ # forking from mcg, this opt unnec
+[ `ls $LOHHLA_OUT_DIR/Figures/*.pdf | grep -c ^` -eq 0 ] && touch $LOHHLA_OUT_DIR/Figures/no_lohhla_result.pdf
 
 conda deactivate
 
