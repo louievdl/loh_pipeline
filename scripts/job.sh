@@ -2,6 +2,7 @@
 # note, all job attributes specified outside this script
 
 # running env supplies GENOME, CHR_SUFFIX, RESULTS_BASE_DIR, SAMPLE_METADATA, USE_SCRATCH
+echo "starting job $JOB_ID.$SGE_TASK_ID at "`date`
 
 #source ~/.bashrc # add condabin to PATH
 echo "path $PATH ; conda $CONDA_EXE"
@@ -16,6 +17,7 @@ function finish {
     ls -l $SCRATCH_DIR
     echo "deleting scratch..."
     rm -rf $SCRATCH_DIR
+    echo "finishing at "`date`
 }
 # Always wipe scratch
 trap finish EXIT INT TERM # ERR # don't trap errors (polysolver may end in error, even when successful)
@@ -81,6 +83,8 @@ fi
 #
 #################################################
 
+echo "starting sequenza analysis at "`date`
+
 ### SET SEQUENZA VARS AND DIRS ###
 
 SEQUENZA_DIR=$SAMPLE_DIR/sequenza
@@ -105,6 +109,7 @@ else
     SEQZ_FILE=$SEQUENZA_DIR/binned.seqz.gz
 fi
 
+echo "starting ctl.pileup at "`date`
 if [ ! -f $SEQUENZA_DIR/ctl.pileup ]
 then
 
@@ -117,6 +122,7 @@ then
 
 fi
 
+echo "starting trt.pileup at "`date`
 if [ ! -f $SEQUENZA_DIR/trt.pileup ]
 then
 
@@ -129,6 +135,7 @@ then
 
 fi
 
+echo "starting seqz analysis at "`date`
 if [ ! -f $SEQUENZA_DIR/binned.seqz.gz ]
 then
     sequenza-utils bam2seqz -p -n $CTL_PILEUP -t $TRT_PILEUP \
@@ -142,6 +149,7 @@ fi
 
 ### ANALYSE SEQZ ###
 
+echo "starting purity/ploidy analysis at "`date`
 if [ ! -f $SEQUENZA_DIR/purity_ploidy.txt ]
 then
     Rscript -e '
@@ -192,6 +200,8 @@ conda deactivate
 #
 #################################################
 
+echo "starting polysolver analysis at "`date`
+
 ### SET POLYSOLVER VARS AND DIRS ###
 
 POLYSOLVER_DIR=$SAMPLE_DIR/polysolver
@@ -238,6 +248,8 @@ fi
 #
 #################################################
 
+echo "starting LOHHLA analysis at "`date`
+
 ### SET LOHHLA VARS AND DIRS ###
 
 CTL_BAM_SIZE=$(stat -c%s "$CTL_BAM") # rough estimates of num reads
@@ -281,6 +293,7 @@ if [ $CTL_BAM_SORTED -eq 0 ]; then
     ln -s $CTL_SORTED_BAM.bai $CTL_BAM_LINK.bai
 fi
 
+echo "starting LOHHLAscript.R at "`date`
 # LOHHLA is fork of bitbucket.org/mcgranahanlab/lohhla
 #echo "$SHELL"
 Rscript $PPLN_BASE_DIR/LOHHLA/LOHHLAscript.R \
@@ -305,6 +318,7 @@ Rscript $PPLN_BASE_DIR/LOHHLA/LOHHLAscript.R \
 # by supplying estimated read counts, cut down run time substantially
 #--LOHHLA_loc=$PPLN_BASE_DIR/LOHHLA \ # forking from mcg, this opt unnec
 [ `ls $LOHHLA_OUT_DIR/Figures/*.pdf | grep -c ^` -eq 0 ] && touch $LOHHLA_OUT_DIR/Figures/no_lohhla_result.pdf
+echo "finishing LOHHLAscript.R at "`date`
 
 conda deactivate
 
