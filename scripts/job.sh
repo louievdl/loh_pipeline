@@ -184,9 +184,9 @@ then
         confint <- get.ci(CP);
         ploidy <- confint$max.ploidy;
         cellularity <- confint$max.cellularity;
-        cat("\tPloidy\ttumorPurity\ttumorPloidy\n",sample_name,"\t2\t",cellularity,"\t",ploidy,"\n",sep="");
+        cat("Ploidy\ttumorPurity\ttumorPloidy\n",sample_name,"\t2\t",cellularity,"\t",ploidy,"\n",sep="");
     ' $SEQZ_FILE $TRT_BASENAME > $SEQUENZA_DIR/purity_ploidy.txt || true
-    #   Ploidy  tumorPurity     tumorPloidy     
+    #Ploidy  tumorPurity     tumorPloidy     # no \t before first colname
     #example_tumor_sorted    2       0.8     1.8     # not sure what Ploidy is for, need tumor* vars for lohhla
 fi
 
