@@ -1,5 +1,7 @@
 #!/bin/bash
-#qsub -cwd -l "h_rt=0:10:0,h_vmem=16G,tmem=16G -t 1-$TASK_COUNT -tc 10 -v GENOME=hg19,CHR_SUFFIX=nochr,RESULTS_BASE_DIR=/SAN/colcc/alex_work/samples_analysis,SAMPLE_METADATA=configuration/xxx.txt,PPLN_BASE_DIR=/SAN/colcc/alex_work/pipeline,CONDA_EXE=$CONDA_EXE redo_lohhla.sh
+#SAMPLE_METADATA=configuration/xxx.txt
+#TASK_COUNT=$((`grep -c ^ $SAMPLE_METADATA` - 1))
+#qsub -cwd -l h_rt=0:10:0,h_vmem=16G,tmem=16G -t 1-$TASK_COUNT -tc 10 -v GENOME=hg19,CHR_SUFFIX=nochr,RESULTS_BASE_DIR=/SAN/colcc/alex_work/samples_analysis,SAMPLE_METADATA=$SAMPLE_METADATA,PPLN_BASE_DIR=/SAN/colcc/alex_work/pipeline,CONDA_EXE=$CONDA_EXE redo_lohhla.sh
 # get TASK_COUNT from num lines in configuration/xxx.txt
 
 # running env supplies GENOME, CHR_SUFFIX, RESULTS_BASE_DIR, SAMPLE_METADATA
