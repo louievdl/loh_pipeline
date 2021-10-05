@@ -86,15 +86,17 @@ plot_table <- hla_loss %>% filter(numMisMatchSitesCov >= 5) %>%
     mutate(hla_gene = substr(HLA_A_type1, 1, 5)) %>%
     select(region, tumour_type, hla_gene, kept_allele_cn, loss_allele_cn, PVal_unique) %>%
     pivot_longer(cols = all_of(c(4,5)), names_to = "which_allele", values_to = "cn") %>%
-    group_by(region, hla_gene) %>% mutate(abs_cn = abs(cn)) %>% mutate(max_abs_cn = max(abs_cn)) %>%
-    mutate(sig = ifelse(abs_cn == max_abs_cn & PVal_unique < 0.01, "YES", "NO")) %>% ungroup()
+    group_by(region, hla_gene) %>% mutate(min_cn = min(cn)) %>%
+    mutate(sig = ifelse(cn == min_cn & PVal_unique < 0.01, "sig", "ns")) %>% ungroup()
+    #%>% mutate(abs_cn = abs(cn)) %>% mutate(max_abs_cn = max(abs_cn)) %>%
+    #mutate(sig = ifelse(abs_cn == max_abs_cn & PVal_unique < 0.01, "YES", "NO")) %>% ungroup()
 
 # do summary plot, then extract plots from result pdfs to make overall summary.
 plot_table <- plot_table[which(!is.na(plot_table$sig)),]
 p <- ggplot(plot_table, aes(x=which_allele, y=cn, col=hla_gene, alpha=sig)) +
     geom_point(width = 0.0, size = 0.25, position = position_jitterdodge(seed = 100, dodge.width = 0.7, jitter.width = 0.2)) + ## size = mm; width = portion of horizontal space to next class
     scale_color_manual(values=c("hla_a" = "#0050a0", "hla_b" = "#800080", "hla_c" = "red4")) +
-    scale_alpha_manual(values=c("NO" = 0.2, "YES" = 1)) +
+    scale_alpha_manual(values=c("ns" = 0.2, "sig" = 1)) +
     stat_summary(fun.data = mean_se, geom = "errorbar", colour = "black", size = 0.35, width = 0.2) +
     #stat_summary(aes_string(group = params$colour_var), fun.data = mean_se, geom = "errorbar", size = 0.35, width = 0.2, position = position_dodge(width = 0.75)) + # size = linewidth; width = errorbar width, where each class is at an integer separation; width=1 means adjacent error bars just touch
     stat_summary(fun.y = "mean", geom = "point", pch = 16, colour = "black", size = 0.7) + # , colour = "black"
@@ -108,7 +110,7 @@ p <- ggplot(plot_table, aes(x=which_allele, y=cn, col=hla_gene, alpha=sig)) +
           plot.margin=unit(c(0.15,0.25,0.05,0.05), "cm"),
           axis.text.x = element_text(angle = 30, hjust = 1),
           axis.title.x = element_blank())
-ggsave("analyse_hla_loss2.pdf", plot = p, width = 55, height = 45, units = "mm", dpi = 300)
+ggsave("~/alex_work/loh_pipeline/scripts/downloaded_results/analyse_hla_loss.pdf", plot = p, width = 55, height = 45, units = "mm", dpi = 300)
 #save.image("analyse_hla_loss.rda")
 
 
